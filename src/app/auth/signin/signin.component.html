@@ -1,45 +1,136 @@
 <div class="card">
   <div class="card-header">Sign in</div>
   <div class="card-body">
-    <form class="form-horizontal" method="post" action="#">
+    <form class="form-horizontal" [formGroup]="signinForm">
       <div class="form-group">
-        <label for="username" class="cols-sm-2 control-label">Username</label>
-        <div class="cols-sm-10">
-          <div class="input-group">
-            <span class="input-group-text"
-              ><i class="fa fa-users fa" aria-hidden="true"></i
-            ></span>
-            <input
-              type="text"
-              class="form-control"
-              name="username"
-              id="username"
-              placeholder="Enter your Username"
-            />
+        <button
+          class="btn btn-secondary"
+          type="button"
+          (click)="getSampleSignInInfo()"
+        >
+          Get sample signin info
+        </button>
+      </div>
+      <div formGroupName="credentialsForm">
+        <div class="form-group">
+          <label for="username" class="cols-sm-2 control-label">Username</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-text"
+                ><i class="fa fa-users fa" aria-hidden="true"></i
+              ></span>
+              <input
+                type="text"
+                class="form-control"
+                name="username"
+                id="username"
+                formControlName="username"
+                placeholder="Enter your Username"
+              />
+            </div>
           </div>
+          <ng-container
+            *ngIf="
+              signinForm.get('credentialsForm.username').invalid &&
+              signinForm.get('credentialsForm.username').touched
+            "
+          >
+            <small
+              *ngIf="
+                signinForm.get('credentialsForm.username').errors[
+                  'nameIsForbidden'
+                ]
+              "
+              class="form-text text-muted"
+              >Please enter a valid username</small
+            >
+            <small
+              *ngIf="
+                signinForm.get('credentialsForm.username').errors['required']
+              "
+              class="form-text text-muted"
+              >Username is required</small
+            >
+            <small
+              *ngIf="
+                signinForm.get('credentialsForm.username').errors[
+                  'usernameExists'
+                ]
+              "
+              class="form-text text-muted"
+              >Username already exists</small
+            >
+          </ng-container>
+        </div>
+        <div class="form-group">
+          <label for="password" class="cols-sm-2 control-label">Password</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-text"
+                ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                id="password"
+                placeholder="Enter your Password"
+                formControlName="password"
+              />
+            </div>
+          </div>
+          <small
+            *ngIf="
+              signinForm.get('credentialsForm.password').invalid &&
+              signinForm.get('credentialsForm.password').touched
+            "
+            class="form-text text-muted"
+            >Please enter a valid password</small
+          >
         </div>
       </div>
-      <div class="form-group">
-        <label for="password" class="cols-sm-2 control-label">Password</label>
-        <div class="cols-sm-10">
-          <div class="input-group">
-            <span class="input-group-text"
-              ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
-            ></span>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              id="password"
-              placeholder="Enter your Password"
-            />
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
+          <div class="col-sm-10">
+            <div class="form-check" *ngFor="let gender of genders; index as id">
+              <label class="form-check-label" for="gender-{{ id }}">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  id="gender-{{ id }}"
+                  [value]="gender"
+                  required
+                  formControlName="gender"
+                />{{ gender }}
+              </label>
+            </div>
           </div>
         </div>
+      </fieldset>
+      <small
+        *ngIf="signinForm.invalid && signinForm.touched"
+        class="form-text text-muted"
+        >Please enter valid data</small
+      >
+      <div class="form-group" formArray="hobbies">
+        <button class="btn btn-secondary" type="button" (click)="addHobby()">
+          Add Hobbies
+        </button>
+        <input
+          type="text"
+          class="form-control"
+          *ngFor="let hobbyControl of formData.controls"
+          [formControl]="hobbyControl"
+        />
       </div>
       <div class="form-group ">
         <button
           type="button"
+          [disabled]="!isFormValid"
           class="btn btn-primary btn-lg btn-block login-button"
+          (click)="onSubmit()"
         >
           Sign in
         </button>
