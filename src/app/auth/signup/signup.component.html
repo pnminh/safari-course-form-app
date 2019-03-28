@@ -1,114 +1,209 @@
 <div class="card">
-    <div class="card-header">Register</div>
-    <div class="card-body">
-      <form class="form-horizontal" method="post" action="#">
+  <div class="card-header">Register</div>
+  <div class="card-body">
+    <form class="form-horizontal" (ngSubmit)="onSubmit()" #signupForm="ngForm">
+      <div class="form-group">
+        <label for="name" class="cols-sm-2 control-label">Your Name</label>
+        <div class="cols-sm-10">
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="fa fa-user fa" aria-hidden="true"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              placeholder="Enter your Name"
+              ngModel
+              required
+              #name="ngModel"
+            />
+          </div>
+        </div>
+        <small *ngIf="name.invalid && name.touched" class="form-text text-muted"
+          >Please enter a valid name</small
+        >
+      </div>
+      <input type="button" value="Suggest Username" class="btn btn-primary" (click)="setSuggestedUsername()">
+
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
+          <div class="col-sm-10">
+            <div class="form-check" *ngFor="let gender of genders; index as id">
+              <label class="form-check-label" for="gender-{{ id }}">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  id="gender-{{ id }}"
+                  ngModel
+                  [value]="gender"
+                  required
+                />{{ gender }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-group">
+        <label for="email" class="cols-sm-2 control-label">Your Email</label>
+        <div class="cols-sm-10">
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="fa fa-envelope fa" aria-hidden="true"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="email"
+              id="email"
+              placeholder="Enter your Email"
+              ngModel
+              required
+              email
+              #email="ngModel"
+            />
+          </div>
+          <small
+            *ngIf="email.invalid && email.touched"
+            id="emailHelp"
+            class="form-text text-muted"
+            >Please enter a valid email</small
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="username" class="cols-sm-2 control-label">Username</label>
+        <div class="cols-sm-10">
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="fa fa-users fa" aria-hidden="true"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              id="username"
+              placeholder="Enter your Username"
+              ngModel
+            />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="cols-sm-2 control-label">Password</label>
+        <div class="cols-sm-10">
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
+            ></span>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="password"
+              placeholder="Enter your Password"
+              ngModel
+            />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirm" class="cols-sm-2 control-label"
+          >Confirm Password</label
+        >
+        <div class="cols-sm-10">
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
+            ></span>
+            <input
+              type="password"
+              class="form-control"
+              name="confirm"
+              id="confirm"
+              placeholder="Confirm your Password"
+              ngModel
+            />
+          </div>
+        </div>
+      </div>
+      <div ngModelGroup="questionAnswer" #questionAnswerGroup="ngModelGroup">
         <div class="form-group">
-          <label for="name" class="cols-sm-2 control-label"
-            >Your Name</label
+          <label for="secretQuestion" class="cols-sm-2 control-label"
+            >Secret Question</label
           >
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-text"
-                ><i class="fa fa-user fa" aria-hidden="true"></i
+                ><i class="fa fa-question fa-lg" aria-hidden="true"></i
               ></span>
-              <input
-                type="text"
+              <select
                 class="form-control"
-                name="name"
-                id="name"
-                placeholder="Enter your Name"
-              />
+                name="secretQuestion"
+                id="secret-question"
+                [ngModel]="defaultQuestionOption"
+                required
+              >
+                <option
+                  *ngFor="let question of questions"
+                  [value]="question.key"
+                  >{{ question.value }}</option
+                >
+              </select>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label for="email" class="cols-sm-2 control-label"
-            >Your Email</label
+          <label for="secretAnswer" class="cols-sm-2 control-label"
+            >Secret Answer</label
           >
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-text"
-                ><i class="fa fa-envelope fa" aria-hidden="true"></i
+                ><i class="fa fa-reply fa-xs" aria-hidden="true"></i
               ></span>
-              <input
-                type="text"
+              <textarea
                 class="form-control"
-                name="email"
-                id="email"
-                placeholder="Enter your Email"
-              />
+                name="secretAnswer"
+                id="secret-answer"
+                rows="3"
+                [(ngModel)]="questionAnswer"
+                required
+              ></textarea>
             </div>
+            <p *ngIf="questionAnswer">Your answer is: {{ questionAnswer }}</p>
           </div>
         </div>
-        <div class="form-group">
-          <label for="username" class="cols-sm-2 control-label"
-            >Username</label
-          >
-          <div class="cols-sm-10">
-            <div class="input-group">
-              <span class="input-group-text"
-                ><i class="fa fa-users fa" aria-hidden="true"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control"
-                name="username"
-                id="username"
-                placeholder="Enter your Username"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password" class="cols-sm-2 control-label"
-            >Password</label
-          >
-          <div class="cols-sm-10">
-            <div class="input-group">
-              <span class="input-group-text"
-                ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
-              ></span>
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                id="password"
-                placeholder="Enter your Password"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="confirm" class="cols-sm-2 control-label"
-            >Confirm Password</label
-          >
-          <div class="cols-sm-10">
-            <div class="input-group">
-              <span class="input-group-text"
-                ><i class="fa fa-lock fa-lg" aria-hidden="true"></i
-              ></span>
-              <input
-                type="password"
-                class="form-control"
-                name="confirm"
-                id="confirm"
-                placeholder="Confirm your Password"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="form-group ">
-          <button
-            type="button"
-            class="btn btn-primary btn-lg btn-block login-button"
-          >
-            Register
-          </button>
-        </div>
-        <div class="login-register">
-            Already registered?
-            <a [routerLink]="['/signin']">Sign in here</a>
-          </div>
-      </form>
-    </div>
+        <p *ngIf="questionAnswerGroup.touched && questionAnswerGroup.invalid">
+          Both question and answer are required
+        </p>
+      </div>
+      <div class="form-group ">
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg btn-block login-button"
+          [disabled]="signupForm.invalid"
+        >
+          Register
+        </button>
+      </div>
+      <div class="login-register">
+        Already registered?
+        <a [routerLink]="['/signin']">Sign in here</a>
+      </div>
+    </form>
   </div>
+  <hr>
+  <div class="card-body" *ngIf="isSubmitted" >
+    <h2>Here is the info you enter:</h2>
+    <div>Your name:{{user.name}}</div>
+    <div>Your username:{{user.username}}</div>
+    <div>Your email:{{user.email}}</div>
+    <div>Your gender:{{user.gender}}</div>
+    <div>Your secret question:{{user.question}}</div>
+    <div>Your secret answer:{{user.answer}}</div>
+  </div>
+</div>
